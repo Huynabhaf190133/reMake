@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+</head>
+<body>
+    <style>
+        .triangle_down
+        {
+            width: 0;
+            height: 0;
+            border-top: 15px solid red;
+            border-left: 9px solid transparent;
+            border-right: 9px solid transparent;
+            position: absolute;
+            right: 0.9rem;
+            margin-top: 5px;
+        }
+        #clock
+        {
+            color: red;
+            font-size: 2rem;
+            text-align: center;
+            filter: drop-shadow(5px 5px 5px black);
+        }
+        .al-right
+        {
+            text-align: right;
+        }
+        .text
+        {
+            display:none;
+            color: red;
+        }
+        #tasks
+        {
+            color: red;
+            font-size: 2rem;
+            filter: drop-shadow(4px 2px 5px blue);
+        }
+        body
+        {
+            background-color: #85FFBD;
+            background-image: linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%);
+        }
+    </style>
+    <div class="container">
+
+        <div class="row">
+            <!--Make clock to show a Header of website-->
+            <div class="col-lg-12">
+                <h1 id="clock" title="haha"></h1>
+            </div>
+            <!--Form input-->
+            <div class="col-lg-10">
+                <div class="form-group">
+                    <input type="text" class="form-control w-100" id="input-user">
+                    <small class="text" id="text">Vui lòng nhập thông tin !!!</small>
+                </div>
+            </div>
+            <!--Select các option-->
+            <div class="col-lg-2">
+                <div class="dropdown">
+                    <button class="w-100 form-control" id="dropdownButton"  aria-haspopup="true" aria-expanded="false" data-toggle="dropdown">
+                        <span id="btn-content">Done</span><i class="triangle_down"></i>
+                    </button>
+                    <ul id="dropdown-option" class="dropdown-menu"  aria-labelledby="dropdownButton">
+                        <li class="dropdown-item active" onclick="changeStatus('Done',this)">Done</li>
+                        <li class="dropdown-item" onclick="changeStatus('Todo',this)">Todo</li>
+                        <li class="dropdown-item" onclick="changeStatus('Others',this)">Others</li>
+                    </ul>
+                </div>
+            </div>
+            <!--Design button-->
+
+            <!--button-->
+            <div class="col-lg-12 al-right">
+                <button onclick="create()" type="button" class="btn btn-danger">Add</button>
+                <button onclick="update()" type="button" class="btn btn-success">Update</button>
+                <button onclick="xoa()" type="button" class="btn btn-primary">Delete</button>
+            </div>
+            <!--Tasks-->
+            <div class="col-lg-12">
+                <h3 id="tasks"></h3>
+            </div>
+            <div class="col-lg-12">
+                <table class="table border" id="table">
+                    <tr>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Time</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Viết function tạo thời gian
+        function setTime()
+        {
+            var date=new Date();
+            var h=date.getHours();
+            var m=date.getMinutes();
+            var s=date.getSeconds();
+            document.getElementById("clock").innerHTML=h+":"+m+":"+s;
+            setInterval("setTime()",1000);
+        }
+        setTime();
+        // tạo function để change Status
+        function changeStatus(status,e)
+        {
+            document.getElementsByClassName('active')[0].classList.remove('active');
+            e.classList.add("active");
+            document.getElementById("btn-content").innerHTML=status;
+        }
+        // tạo mảng dsach để chứa
+        dsach=[];
+        // tạo localstorage
+        function localStoragedata()
+        {
+            localStorage.setItem("danhsach",JSON.stringify(dsach));
+        }
+        // get đữ liệu từ Localstorage ra nếu như dữ liệu chưa được tồn tại và thực hiện nối mãng bằng dấu 3 chấm
+        var checkls=localStorage.getItem("danhsach");
+        if(checkls!=null)
+        {
+            dsach=[...JSON.parse(checkls)];
+        }
+        // tạo
+        function create()
+        {
+            var input=document.getElementById("input-user").value.trim();
+            if(input=="")
+            {
+                document.getElementById("text").style.display="block";
+            }
+            else
+            {
+                document.getElementById("text").style.display="none";
+                dsach.push(make());
+                localStoragedata();
+                doc();
+            }
+            
+        }
+        // make
+        function make()
+        {
+            var input=document.getElementById('input-user').value;
+            var time=document.getElementById("clock").innerText;
+            var status=document.getElementById("btn-content").innerText;
+            var cv={
+                ten:input,
+                tgian:time,
+                trthai:status
+            }
+            return cv;
+        }
+        //đọc
+        function doc()
+        {
+            var local=JSON.parse(localStorage.getItem("danhsach"));
+            var trData="";
+            if(local!=null)
+            {
+                for(var i=0;i<local.length;i++)
+                {
+                    trData+="<tr onclick='getIndex("+i+")'>"+
+                    "<td>"+local[i].ten+"</td>"+
+                    "<td>"+local[i].tgian+"</td>"+
+                    "<td>"+local[i].trthai+"</td>"+
+                    "</tr>"
+                    
+                }
+            }
+            document.getElementById("tasks").innerText="Tasks ("+i+")";
+            document.getElementById("table").innerHTML=trData;
+        }
+        doc();
+        //get Index
+        function getIndex(currentIndex)
+        {
+            localStorageIndex=currentIndex;
+            document.getElementById("input-user").value=dsach[currentIndex].ten;
+        }
+        // update
+        var localStorageIndex;
+        function update()
+        {
+            dsach[localStorageIndex]=make();
+            localStoragedata();
+            doc();
+        }
+        // delete
+        function xoa()
+        {
+            var check=confirm("Do you want Delete ?");
+            if(check==true)
+            {
+                dsach.splice(localStorageIndex,1);
+                localStoragedata();
+                doc();
+            }
+            
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+#clock {
+  color: red;
+  position: absolute;
+}
+.img-left {
+  background-image: url(img/bg.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  height: 100vh;
+}
+
+.control-container {
+  min-height: 100vh;
+}
+
+.err
+{
+  color: red !important;
+  display: none;
+}
+.col-right-control
+{
+  background-color: #D9AFD9;
+  background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);  
+}
+h2
+{
+  color: red;
+  text-align: center;
+  margin-top: 20%;
+  margin-bottom: 6%;
+}
+.button-control
+{
+  background-color: red;
+}
+.label
+{
+  color: green;
+  position: absolute;
+  transform: translateY(-1.7rem);
+  opacity: 0.6;
+  font-size: 14px;
+  margin-left: 7px;
+}
+.input-control:hover,.label
+{
+  cursor: pointer;
+}
+@media (min-width: 992px) { 
+  .input-control:focus~.label,.input-control:not(:placeholder-shown)~.label
+  {
+    transform: translateY(-3.9rem);
+    transition: all 0.4s;
+  }
+ }
+ @media (max-width: 992px)
+ {
+  .img-left
+  {
+    display: none;
+  }
+  .label
+  {
+    transition: all 0.5s;
+    transform: translateY(-3.8rem);
+  }
+ }
+.input-control::placeholder
+{
+  color: transparent;
+}
+.form-control
+{
+  transition: all 1s ease-in-out;
+}
